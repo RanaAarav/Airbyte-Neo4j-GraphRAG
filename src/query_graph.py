@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# 1. Connect to Neo4j
 graph = Neo4jGraph(
     url="bolt://localhost:7687", 
     username="neo4j", 
@@ -16,15 +15,12 @@ graph = Neo4jGraph(
 
 graph.refresh_schema()
 
-# 2. Initialize Gemini
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash", 
+    model="gemini-3.0-pro", 
     temperature=0,
     convert_system_message_to_human=True
 )
 
-# 3. Define a Strict Prompt (The Fix)
-# We tell the AI exactly what the Nodes and Relationships look like.
 CYPHER_GENERATION_TEMPLATE = """
 Task:Generate Cypher statement to query a graph database.
 Instructions:
@@ -48,12 +44,11 @@ CYPHER_PROMPT = PromptTemplate(
     template=CYPHER_GENERATION_TEMPLATE
 )
 
-# 4. Create the Chain with the Prompt
 chain = GraphCypherQAChain.from_llm(
     llm, 
     graph=graph, 
     verbose=True,
-    cypher_prompt=CYPHER_PROMPT, # Inject the rules
+    cypher_prompt=CYPHER_PROMPT,
     allow_dangerous_requests=True
 )
 
