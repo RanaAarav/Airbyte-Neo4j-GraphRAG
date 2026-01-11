@@ -26,7 +26,7 @@ Features
 
 Setup
 -----
-1.  Start Neo4j: ```bash docker-compose up -d```
-2.  Seed Mock Data: ```bash python src/seed_airbyte_data.py```
-3.  Build Graph: ```bash python src/build_graph.py```
-4.  Query AI: ```bash python src/query_graph.py```
+1.  Start Neo4j: ```docker-compose up -d```
+2.  Seed Mock Data: ```python src/seed_airbyte_data.py```
+3.  Build Graph: ```python src/build_graph.py```
+4.  Query AI: ```python src/query_graph.py```
