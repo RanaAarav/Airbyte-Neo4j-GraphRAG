@@ -8,7 +8,6 @@ AUTH = ("neo4j", "password")
 def seed_data(tx):
     print("Seeding Mock Airbyte Tables...")
     
-    # 1. Mock GitHub Users (Raw JSON format like Airbyte)
     users = [
         {"login": "dev_guru", "id": 101},
         {"login": "ai_wizard", "id": 102},
@@ -22,8 +21,7 @@ def seed_data(tx):
                 _airbyte_ab_id: randomUUID()
             })
         """, data=json.dumps(u))
-
-    # 2. Mock GitHub Issues
+        
     issues = [
         {"id": 1, "title": "Login fails on Safari", "user": {"login": "bug_hunter"}, "body": "Auth error 500"},
         {"id": 2, "title": "Add Graph support", "user": {"login": "dev_guru"}, "body": "We need Neo4j"},
