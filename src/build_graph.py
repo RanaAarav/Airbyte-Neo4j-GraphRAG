@@ -4,10 +4,8 @@ URI = "bolt://localhost:7687"
 AUTH = ("neo4j", "password")
 
 def transform_graph(tx):
-    print("🔄 transforming Raw Airbyte Data into Knowledge Graph...")
+    print("Transforming Raw Airbyte Data into Knowledge Graph...")
 
-    # 1. Extract Users from Raw JSON
-    # Airbyte stores data as a string in `_airbyte_data`. We parse it using APOC or Cypher.
     tx.run("""
         MATCH (r:_AirbyteRawGitHubUsers)
         WITH r, apoc.convert.fromJsonMap(r._airbyte_data) AS data
@@ -15,8 +13,6 @@ def transform_graph(tx):
         SET u.id = data.id
     """)
 
-    # 2. Extract Issues and Link to Creators
-    # This is the "GraphRAG" magic: Connecting disparate data points
     tx.run("""
         MATCH (r:_AirbyteRawGitHubIssues)
         WITH r, apoc.convert.fromJsonMap(r._airbyte_data) AS data
