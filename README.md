@@ -1,32 +1,28 @@
-GraphRAG Pipeline: Ingesting Siloed Data into Knowledge Graphs
-==============================================================
+GraphRAG Pipeline: Airbyte Ingestion to Neo4j Knowledge Graph
+=============================================================
 
 ![Airbyte](https://img.shields.io/badge/ETL-Airbyte-blue)
 ![Neo4j](https://img.shields.io/badge/DB-Neo4j-green)
 ![LangChain](https://img.shields.io/badge/AI-LangChain-orange)
 
-**The Problem:** Standard Vector RAG is relationship-blind. It treats data as a flat list of embeddings, failing to connect the dots between related entities (e.g., a Bug Report connected to a specific User and a Code Release).
-
-**The Solution:** An automated pipeline that turns raw data into a Knowledge Graph. We use Airbyte to ingest structured data from SaaS sources and Neo4j to store the semantic relationships.
+This project implements an automated pipeline for building Knowledge Graphs to support GraphRAG applications. It solves the relational blindness inherent in standard vector-based RAG by preserving semantic links between ingested entities.
 
 Architecture
 ------------
+1.  Ingestion: Utilizes Airbyte to extract structured data from SaaS sources into Neo4j.
+2.  Transformation: A Python-based logic layer parses raw JSON blobs into a schema-defined graph.
+3.  Semantic Linkage: A Python-based transformation layer (built with Python 3.14) parses raw JSON and creates graph edges (`:CREATED`, `:DEPENDS_ON`).
+4.  Retrieval: Uses Gemini 3.0 Pro to translate natural language queries into Cypher statements.
 
-1.  **Ingestion:** Airbyte extracts data from sources (GitHub/Jira/Postgres).
-2.  **Storage:** Neo4j captures the data as nodes.
-3.  **Semantic Linkage:** A Python-based transformation layer (built with Python 3.14) parses raw JSON and creates graph edges (`:CREATED`, `:DEPENDS_ON`).
-4.  **Reasoning:** Gemini 3.0 Pro translates natural language into Cypher queries.
-    
-Features
---------
+Requirements
+------------
+*    Docker and Docker Compose
+*    Python 3.11+
+*    Google Gemini API Key
 
-*   **Agentic Retrieval:** Uses Gemini 3.0 to traverse complex graph paths.
-*   **Modular ETL:** Airbyte manages the API data extraction.
-*   **Schema-Aware:** Strict prompts ensure high-accuracy Cypher generation.
-
-Setup
------
+Execution Flow
+--------------
 1.  Start Neo4j: ```docker-compose up -d```
-2.  Seed Mock Data: ```python src/seed_airbyte_data.py```
+2.  Seed Mock Data: ```python src/seed_airbyte_data.py``` (Simulates Airbyte Raw destination)
 3.  Build Graph: ```python src/build_graph.py```
-4.  Query AI: ```python src/query_graph.py```
+4.  Run Agent: ```python src/query_graph.py```
